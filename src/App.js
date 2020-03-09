@@ -10,7 +10,7 @@ function App() {
       <div className="row">
         <div className="col bg-danger left-panel">
           <FileSearch
-            title="我的云文档"
+            title="My document"
             onFileSearch={value => {
               console.log(value);
             }}
