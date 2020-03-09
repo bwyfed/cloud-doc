@@ -3,6 +3,8 @@ import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FileSearch from './components/FileSearch';
+import FileList from './components/FileList';
+import defaultFiles from './utils/defaultFiles';
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
               console.log(value);
             }}
           />
+          <FileList files={defaultFiles} />
         </div>
         <div className="col bg-primary right-panel">
           <h1>this is the right</h1>
