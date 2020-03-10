@@ -1,8 +1,10 @@
 import React from 'react';
 // import logo from './logo.svg';
 import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons';
+import SimpleMDE from 'react-simplemde-editor';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'easymde/dist/easymde.min.css';
 import FileSearch from './components/FileSearch';
 import FileList from './components/FileList';
 import BottomBtn from './components/BottomBtn';
@@ -53,6 +55,15 @@ function App() {
             }}
             onCloseTab={id => {
               console.log('closing ', id);
+            }}
+          />
+          <SimpleMDE
+            value={defaultFiles[1].body}
+            onChange={value => {
+              console.log(value);
+            }}
+            options={{
+              minHeight: '515px'
             }}
           />
         </div>
