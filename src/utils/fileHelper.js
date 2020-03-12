@@ -1,5 +1,5 @@
-const fs = require('fs').promises;
-const path = require('path');
+const fs = window.require('fs').promises;
+// const path = window.require('path');
 
 const fileHelper = {
   readFile: path => {
@@ -16,8 +16,10 @@ const fileHelper = {
   }
 };
 
-const testPath = path.join(__dirname, 'helper.js');
-const testWritePath = path.join(__dirname, 'hello.md');
+export default fileHelper;
+
+// const testPath = path.join(__dirname, 'helper.js');
+// const testWritePath = path.join(__dirname, 'hello.md');
 // fileHelper.readFile(testPath).then(data => {
 //   console.log(data);
 // });
@@ -30,7 +32,7 @@ const testWritePath = path.join(__dirname, 'hello.md');
 //   console.log('重命名成功');
 // });
 
-const renamePath = path.join(__dirname, 'rename.md');
-fileHelper.deleteFile(renamePath).then(() => {
-  console.log(`${renamePath} 删除成功`);
-});
+// const renamePath = path.join(__dirname, 'rename.md');
+// fileHelper.deleteFile(renamePath).then(() => {
+//   console.log(`${renamePath} 删除成功`);
+// });
