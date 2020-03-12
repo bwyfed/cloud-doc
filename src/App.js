@@ -94,13 +94,20 @@ function App() {
     }
   };
   const deleteFile = id => {
-    fileHelper.deleteFile(files[id].path).then(() => {
-      delete files[id];
-      setFiles(files);
-      saveFilesToStore(files);
-      // close the tab if opened
-      tabClose(id);
-    });
+    if (files[id].isNew) {
+      // delete files[id]; // 不是 immutable
+      const { [id]: value, ...afterDelete } = files; // 删除id项
+      setFiles(afterDelete);
+    } else {
+      fileHelper.deleteFile(files[id].path).then(() => {
+        // delete files[id];
+        const { [id]: value, ...afterDelete } = files;
+        setFiles(afterDelete);
+        saveFilesToStore(afterDelete);
+        // close the tab if opened
+        tabClose(id);
+      });
+    }
   };
   const updateFileName = (id, title, isNew) => {
     const newPath = join(savedLocation, `${title}.md`);
