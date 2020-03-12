@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 const { remote } = window.require('electron');
 const { Menu, MenuItem } = remote;
 
-const useContextMenu = (itemArr, targetSelector) => {
+const useContextMenu = (itemArr, targetSelector, deps) => {
   let clickedElement = useRef(null);
   useEffect(() => {
     const menu = new Menu();
@@ -20,7 +20,7 @@ const useContextMenu = (itemArr, targetSelector) => {
     return () => {
       window.removeEventListener('contextmenu', handleContextMenu);
     };
-  }, []); // 挂载的时候起作用，卸载的时候消失，所以dependencies是空数组
+  }, deps); // 挂载的时候起作用，卸载的时候消失，所以dependencies是空数组
   return clickedElement;
 };
 
