@@ -20,9 +20,26 @@ import defaultFiles from './utils/defaultFiles';
 // require node.js modules
 const { join } = window.require('path');
 const { remote } = window.require('electron');
+const Store = window.require('electron-store');
+const fileStore = new Store({ name: 'Files Data' });
+
+const saveFilesToStore = files => {
+  // we don't have to store any info in file system, eg: isNew, body, etc
+  const filesStoreObj = objToArr(files).reduce((result, file) => {
+    const { id, path, title, createAt } = file;
+    result[id] = {
+      id,
+      path,
+      title,
+      createAt
+    };
+    return result;
+  }, {});
+  fileStore.set('files', filesStoreObj);
+};
 
 function App() {
-  const [files, setFiles] = useState(flattenArr(defaultFiles));
+  const [files, setFiles] = useState(fileStore.get('files') || {});
   const [activeFileID, setActiveFileID] = useState('');
   const [openedFileIDs, setOpenedFileIDs] = useState([]);
   const [unsavedFileIDs, setUnsavedFileIDs] = useState([]);
@@ -70,28 +87,29 @@ function App() {
     }
   };
   const deleteFile = id => {
-    delete files[id];
-    setFiles(files);
-    // close the tab if opened
-    tabClose(id);
+    fileHelper.deleteFile(files[id].path).then(() => {
+      delete files[id];
+      setFiles(files);
+      saveFilesToStore(files);
+      // close the tab if opened
+      tabClose(id);
+    });
   };
   const updateFileName = (id, title, isNew) => {
-    const modifiedFile = { ...files[id], title, isNew: false };
+    const newPath = join(savedLocation, `${title}.md`);
+    const modifiedFile = { ...files[id], title, isNew: false, path: newPath };
+    const newFiles = { ...files, [id]: modifiedFile };
     if (isNew) {
-      fileHelper
-        .writeFile(join(savedLocation, `${title}.md`), files[id].body)
-        .then(() => {
-          setFiles({ ...files, [id]: modifiedFile });
-        });
+      fileHelper.writeFile(newPath, files[id].body).then(() => {
+        setFiles(newFiles);
+        saveFilesToStore(newFiles); // 文件持久化
+      });
     } else {
-      fileHelper
-        .renameFile(
-          join(savedLocation, `${files[id].title}.md`),
-          join(savedLocation, `${title}.md`)
-        )
-        .then(() => {
-          setFiles({ ...files, [id]: modifiedFile });
-        });
+      const oldPath = join(savedLocation, `${files[id].title}.md`);
+      fileHelper.renameFile(oldPath, newPath).then(() => {
+        setFiles(newFiles);
+        saveFilesToStore(newFiles); // 文件持久化
+      });
     }
   };
   const fileSearch = keyword => {
