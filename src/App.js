@@ -155,29 +155,25 @@ function App() {
   };
   const importFiles = () => {
     remote.dialog
-      .showOpenDialog(
-        {
-          title: '选择导入的 Markdown 文件',
-          properties: ['openFile', 'multiSelections'],
-          filters: [{ name: 'Markdown files', extensions: ['md'] }]
-        },
-        paths => {
-          console.log(paths);
-        }
-      )
-      .then(paths => {
-        if (Array.isArray(paths.filePaths)) {
-          console.log(paths.filePaths);
-          // filter out the path we already have in electron store
-          // ["C:\Users\Hello\Documents\fdfdf.md", "C:\Users\Hello\Documents\hello.md"]
-          const filteredPaths = paths.filePaths.filter(path => {
+      .showOpenDialog({
+        title: '选择导入的 Markdown 文件',
+        properties: ['openFile', 'multiSelections'],
+        filters: [{ name: 'Markdown files', extensions: ['md'] }]
+      })
+      .then(result => {
+        console.log(result.canceled);
+        console.log(result.filePaths);
+        if (Array.isArray(result.filePaths)) {
+          // filter out the path we already have in electron store. After filtering, the result are like
+          // ["C:\Users\Hello\Documents\first.md", "C:\Users\Hello\Documents\hello.md"]
+          const filteredPaths = result.filePaths.filter(path => {
             const alreadyAdded = Object.values(files).find(file => {
               return file.path === path;
             });
             return !alreadyAdded;
           });
           // extend the path array to an array contains files info
-          // [{id: '1', path: '', title: ''}, {...}]
+          // [{id: '1', path: '...', title: '...'}, {...}]
           const importFilesArr = filteredPaths.map(path => {
             return {
               id: uuidv4(),
@@ -187,7 +183,7 @@ function App() {
           });
           // get the new files object in flattenArr
           const newFiles = { ...files, ...flattenArr(importFilesArr) };
-          // setState and update electron store
+          // setState and update electron store, then show message box
           setFiles(newFiles);
           saveFilesToStore(newFiles);
           if (importFilesArr.length > 0) {
@@ -198,6 +194,13 @@ function App() {
             });
           }
         }
+      })
+      .catch(err => {
+        console.log(err);
+        remote.dialog.showErrorBox({
+          title: '导入文件错误',
+          content: err.message
+        });
       });
   };
 
