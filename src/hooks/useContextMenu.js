@@ -13,7 +13,7 @@ const useContextMenu = (itemArr, targetSelector, deps) => {
       // only show the context menu on current dom element or targetSelector contains target
       if (document.querySelector(targetSelector).contains(e.target)) {
         clickedElement.current = e.target;
-        menu.popup({ window: remote.getCurrentWindow });
+        menu.popup({ window: remote.getCurrentWindow() });
       }
     };
     window.addEventListener('contextmenu', handleContextMenu);

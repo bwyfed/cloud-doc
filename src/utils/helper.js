@@ -16,7 +16,7 @@ export const getParentNode = (node, parentClassName) => {
     if (current.classList.contains(parentClassName)) {
       return current;
     }
-    current = current.parentNode;
+    current = current.parentNode; // 上浮一层
   }
   return false;
 };
