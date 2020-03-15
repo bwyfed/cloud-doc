@@ -15,21 +15,21 @@ let template = [
         label: '保存',
         accelarator: 'CmdOrCtrl+S',
         click: (menuItem, browserWindow, event) => {
-          browserWindow.webContent.send('save-edit-file');
+          browserWindow.webContents.send('save-edit-file');
         }
       },
       {
         label: '搜索',
         accelarator: 'CmdOrCtrl+F',
         click: (menuItem, browserWindow, event) => {
-          browserWindow.webContent.send('search-file');
+          browserWindow.webContents.send('search-file');
         }
       },
       {
         label: '导入',
         accelarator: 'CmdOrCtrl+O',
         click: (menuItem, browserWindow, event) => {
-          browserWindow.webContent.send('import-file');
+          browserWindow.webContents.send('import-file');
         }
       }
     ]
