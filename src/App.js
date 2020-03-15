@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import logo from './logo.svg';
 import {
   faPlus,
@@ -16,10 +16,11 @@ import FileSearch from './components/FileSearch';
 import FileList from './components/FileList';
 import BottomBtn from './components/BottomBtn';
 import TabList from './components/TabList';
-import defaultFiles from './utils/defaultFiles';
+// import defaultFiles from './utils/defaultFiles';
+// import { ipcRenderer } from 'electron';
 // require node.js modules
 const { join, basename, extname, dirname } = window.require('path');
-const { remote } = window.require('electron');
+const { remote, ipcRenderer } = window.require('electron');
 const Store = window.require('electron-store');
 const fileStore = new Store({ name: 'Files Data' });
 
@@ -203,6 +204,16 @@ function App() {
         });
       });
   };
+
+  useEffect(() => {
+    const callback = () => {
+      console.log('hello from menu');
+    };
+    ipcRenderer.on('create-new-file', callback);
+    return () => {
+      ipcRenderer.removeListener('create-new-file', callback);
+    };
+  });
 
   return (
     <div className="App container-fluid px-0">

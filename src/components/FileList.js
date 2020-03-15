@@ -96,7 +96,7 @@ const FileList = ({ files, onFileClick, onSaveEdit, onFileDelete }) => {
                 >
                   {file.title}
                 </span>
-                <button
+                {/* <button
                   type="button"
                   className="icon-button col-2"
                   onClick={() => {
@@ -114,7 +114,7 @@ const FileList = ({ files, onFileClick, onSaveEdit, onFileDelete }) => {
                   }}
                 >
                   <FontAwesomeIcon icon={faTrash} title="删除" size="lg" />
-                </button>
+                </button> */}
               </>
             )}
             {(file.id === editStatus || file.isNew) && (
