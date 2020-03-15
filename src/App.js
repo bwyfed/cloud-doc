@@ -24,6 +24,7 @@ const { join, basename, extname, dirname } = window.require('path');
 const { remote, ipcRenderer } = window.require('electron');
 const Store = window.require('electron-store');
 const fileStore = new Store({ name: 'Files Data' });
+const settingsStore = new Store({ name: 'Settings' });
 
 const saveFilesToStore = files => {
   // we don't have to store any info in file system, eg: isNew, body, etc
@@ -48,7 +49,8 @@ function App() {
   const [searchedFiles, setSearchedFiles] = useState([]);
   // 计算出来的值
   const filesArr = objToArr(files);
-  const savedLocation = remote.app.getPath('documents');
+  const savedLocation =
+    settingsStore.get('savedFileLocation') || remote.app.getPath('documents');
   const fileListArr = searchedFiles.length > 0 ? searchedFiles : filesArr;
   const activeFile = files[activeFileID];
   const openedFiles = openedFileIDs.map(openID => {
